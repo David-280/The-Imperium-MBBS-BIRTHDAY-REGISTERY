@@ -291,7 +291,11 @@ iframe{display:none}
     <p>Please wait while we record your entry</p>
   </div>
 </div>
-
+<footer class="footer">
+  <p>
+    © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
+  </p>
+</footer>
 <script>
 const dobDisplay=document.getElementById("dobDisplay");
 const picker=document.getElementById("picker");
@@ -470,14 +474,12 @@ form.addEventListener("submit", async (e)=>{
     showModal("❌ Error","Submission failed! Please try again.");
   }
 });
+document.getElementById("year").textContent = new Date().getFullYear();
 
 </script>
-<footer class="footer">
-  <p>
-    © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
-  </p>
-</footer>
+
 
 </body>
 </html>
+
 
