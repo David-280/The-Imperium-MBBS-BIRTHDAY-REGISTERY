@@ -145,6 +145,29 @@ button:hover{
   font-family:Cinzel,serif;
   color:var(--gold);
 }
+/* FOOTER */
+.footer{
+  width:100%;
+  margin-top:24px;
+  padding:14px 10px;
+  text-align:center;
+  font-size:0.75rem;
+  color:rgba(255,255,255,0.75);
+  letter-spacing:0.5px;
+}
+
+.footer strong{
+  color:var(--gold);
+  font-weight:600;
+}
+
+/* Mobile fine-tuning */
+@media (max-width:480px){
+  .footer{
+    font-size:0.7rem;
+    padding:12px 8px;
+  }
+}
 
 /* WHEEL PICKER */
 .wheels{
@@ -233,7 +256,7 @@ iframe{display:none}
       🎂 Upload unlocks only when your birthday is within 2 days
     </div>
 
-    <button type="submit">Submit to THE IMPERIUM</button>
+    <button type="submit">Proceed to Submit </button>
   </form>
 </div>
 
@@ -265,7 +288,7 @@ iframe{display:none}
 <div class="modal" id="loadingModal">
   <div class="modal-content">
     <h2>Processing...</h2>
-    <p>Please wait while THE IMPERIUM records your entry</p>
+    <p>Please wait while we record your entry</p>
   </div>
 </div>
 
@@ -398,7 +421,7 @@ form.addEventListener("submit", async (e)=>{
       body:formData
     });
     if(res.ok){
-      showModal("🎉 Success!","Your entry has been recorded in THE IMPERIUM.");
+      showModal("🎉 Success!","Your entry has been recorded in Our Datalist.");
       form.reset();
       photo.disabled=true;
       photo.style.opacity=.6;
@@ -435,7 +458,7 @@ form.addEventListener("submit", async (e)=>{
     loadingModal.style.display="none"; // Hide loading modal
 
     if(res.ok){
-      showModal("🎉 Success!","Your entry has been recorded in THE IMPERIUM.");
+      showModal("🎉 Success!","Your entry has been recorded in OUr Datalist.");
       form.reset();
       photo.disabled=true;
       photo.style.opacity=.6;
@@ -449,6 +472,12 @@ form.addEventListener("submit", async (e)=>{
 });
 
 </script>
+<footer class="footer">
+  <p>
+    © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
+  </p>
+</footer>
 
 </body>
 </html>
+
