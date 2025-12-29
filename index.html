@@ -151,26 +151,31 @@ button:hover{
   color:var(--gold);
 }
 /* FOOTER */
-.footer{
-  width:100%;
-  
-  padding:14px 10px;
-  text-align:center;
-  font-size:0.75rem;
-  color:rgba(255,255,255,0.75);
-  letter-spacing:0.5px;
+/* FIXED RESPONSIVE FOOTER */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 10px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(2, 27, 47, 0.8); /* slight transparent background to separate from form */
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
 }
 
-.footer strong{
-  color:var(--gold);
-  font-weight:600;
+.footer strong {
+  color: var(--gold);
+  font-weight: 600;
 }
 
-/* Mobile fine-tuning */
-@media (max-width:480px){
-  .footer{
-    font-size:0.7rem;
-    padding:12px 8px;
+@media (max-width: 480px) {
+  .footer {
+    font-size: 0.7rem;
+    padding: 10px 8px;
   }
 }
 
@@ -488,6 +493,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 </body>
 </html>
+
 
 
 
