@@ -23,16 +23,12 @@ body{
   background:radial-gradient(circle at top,var(--light),var(--dark) 70%);
   font-family:Poppins,sans-serif;
   color:#fff;
-
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
   align-items:center;
-
   padding:20px;
 }
-
-
 
 .container{
   width:100%;
@@ -150,9 +146,9 @@ button:hover{
   font-family:Cinzel,serif;
   color:var(--gold);
 }
+
 /* FOOTER */
-/* FIXED RESPONSIVE FOOTER */
-.footer {
+.footer{
   position: fixed;
   bottom: 0;
   left: 0;
@@ -161,7 +157,7 @@ button:hover{
   text-align: center;
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.85);
-  background: rgba(2, 27, 47, 0.8); /* slight transparent background to separate from form */
+  background: rgba(2, 27, 47, 0.8);
   backdrop-filter: blur(6px);
   z-index: 1000;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
@@ -205,18 +201,6 @@ button:hover{
 .confetti{position:fixed;inset:0;pointer-events:none}
 iframe{display:none}
 
-/* OPTIONAL: Add subtle shimmer for loading as well */
-#loadingModal .modal-content{
-  background: linear-gradient(180deg,var(--mid),var(--dark));
-  border-radius:18px;
-  padding:28px;
-  max-width:300px;
-  width:80%;
-  text-align:center;
-  border:1px solid rgba(255,255,255,.2);
-  position:relative;
-  overflow:hidden;
-}
 #loadingModal .modal-content::before{
   content:'';
   position:absolute;
@@ -228,29 +212,10 @@ iframe{display:none}
   transform:rotate(25deg);
   animation: shimmer 3s infinite linear;
 }
-.page{
-  min-height:100vh;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-bottom:3px;
-}
-/* === FIX FOOTER LAYOUT (DROP-IN, SAFE) === */
-body{
-  flex-direction: column;
-}
-
-.footer{
- 
-}
-
-
 </style>
 </head>
 
 <body>
-<div class="page">
 <div class="container">
   <div class="title">
     <h1>THE IMPERIUM</h1>
@@ -283,7 +248,7 @@ body{
       🎂 Upload unlocks only when your birthday is within 2 days
     </div>
 
-    <button type="submit">Proceed to Submit </button>
+    <button type="submit">Submit</button>
   </form>
 </div>
 
@@ -302,7 +267,7 @@ body{
   </div>
 </div>
 
-<!-- CUSTOM MODAL -->
+<!-- MODALS -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modalTitle">Notice</h2>
@@ -310,21 +275,25 @@ body{
     <button onclick="closeModal()">Understood</button>
   </div>
 </div>
-<!-- ADD THIS INSIDE <body> ALONGSIDE EXISTING MODALS -->
-<!-- LOADING MODAL -->
+
 <div class="modal" id="loadingModal">
   <div class="modal-content">
     <h2>Processing...</h2>
     <p>Please wait while we record your entry</p>
   </div>
 </div>
-</div>
+
 <footer class="footer">
   <p>
     © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
   </p>
 </footer>
+
 <script>
+// Month array
+const months=[...Array(12)].map((_,i)=>new Date(0,i).toLocaleString('default',{month:'long'}));
+
+// DOM elements
 const dobDisplay=document.getElementById("dobDisplay");
 const picker=document.getElementById("picker");
 const monthWheel=document.getElementById("monthWheel");
@@ -337,16 +306,15 @@ const ring=document.getElementById("ring");
 const progress=document.getElementById("progress");
 const daysText=document.getElementById("daysText");
 const form=document.getElementById("birthdayForm");
-
 const modal=document.getElementById("modal");
 const modalTitle=document.getElementById("modalTitle");
 const modalMessage=document.getElementById("modalMessage");
+const loadingModal=document.getElementById("loadingModal");
 
-// Month array
-const months=[...Array(12)].map((_,i)=>new Date(0,i).toLocaleString('default',{month:'long'}));
+// Populate month wheel
 months.forEach((m,i)=>monthWheel.innerHTML+=`<div data-m="${i}">${m}</div>`);
 
-// Picker logic
+// Date picker logic
 dobDisplay.onclick=()=>picker.style.display="flex";
 monthWheel.onclick=e=>{
   if(!e.target.dataset.m) return;
@@ -394,116 +362,70 @@ function confirmDOB(){
 }
 
 // Image preview
-photo.onchange=()=>{
-  const f=photo.files[0];
-  if(!f) return;
-  preview.style.display="block";
-  previewImg.src=URL.createObjectURL(f);
-};
+photo.onchange=()=>{const f=photo.files[0]; if(!f) return; preview.style.display="block"; previewImg.src=URL.createObjectURL(f);};
 
 // Confetti
 function confetti(){
   const c=document.getElementById("confetti");
   const ctx=c.getContext("2d");
   c.width=innerWidth;c.height=innerHeight;
-  const pieces=[...Array(120)].map(()=>({
-    x:Math.random()*c.width,
-    y:Math.random()*c.height,
-    r:Math.random()*6+2,
-    d:Math.random()*10
-  }));
+  const pieces=[...Array(120)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*6+2,d:Math.random()*10}));
   let t=0;
   (function draw(){
     ctx.clearRect(0,0,c.width,c.height);
-    pieces.forEach(p=>{
-      ctx.fillStyle="#c9a44c";
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fill();
-      p.y+=Math.cos(t+p.d)+1;
-    });
+    pieces.forEach(p=>{ctx.fillStyle="#c9a44c";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();p.y+=Math.cos(t+p.d)+1;});
     t+=.05;
     if(t<6) requestAnimationFrame(draw);
   })();
 }
 
-// Custom Modal
-function showModal(title,msg){
-  modalTitle.textContent=title;
-  modalMessage.textContent=msg;
-  modal.style.display="flex";
-}
+// Modal functions
+function showModal(title,msg){modalTitle.textContent=title;modalMessage.textContent=msg;modal.style.display="flex";}
 function closeModal(){ modal.style.display="none"; }
 
-// Form submit with AJAX
-
-const loadingModal = document.getElementById("loadingModal");
-
-// Modify your form submit code
-// === DROP-IN AJAX SUBMIT (Zero redirect, works with static hosting) ===
-form.addEventListener("submit", async (e) => {
+// Working AJAX submit (zero redirect)
+form.addEventListener("submit", async (e)=>{
   e.preventDefault();
-  if (!dobDisplay.value || !form.name.value) return;
+  if(!dobDisplay.value || !form.name.value) return;
 
   const formData = new FormData();
   formData.append("name", form.name.value);
   formData.append("dob", dobDisplay.value);
-  if (photo.files[0]) formData.append("photo", photo.files[0]);
-  formData.append("_captcha", "false");
-  formData.append("_subject", "THE IMPERIUM Birthday Entry");
+  if(photo.files[0]) formData.append("photo", photo.files[0]);
+  formData.append("_captcha","false");
+  formData.append("_subject","THE IMPERIUM Birthday Entry");
 
-  // Show loading modal
-  loadingModal.style.display = "flex";
+  loadingModal.style.display="flex";
 
-  try {
-    // Using Formsubmit.co JSON endpoint to ensure AJAX works
-    const res = await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com", {
-      method: "POST",
-      body: formData,
-      headers: {
-        'Accept': 'application/json'
-      }
+  try{
+    const res = await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com",{
+      method:"POST",
+      body:formData,
+      headers:{ "Accept":"application/json" }
     });
 
-    loadingModal.style.display = "none"; // hide loader
+    loadingModal.style.display="none";
 
     const data = await res.json();
 
-    if (res.ok && data.success !== false) {
-      showModal("🎉 Success!", "Your entry has been recorded in THE IMPERIUM.");
+    if(res.ok && data.success !== false){
+      showModal("🎉 Success!","Your entry has been recorded in THE IMPERIUM.");
       form.reset();
       photo.disabled = true;
       photo.style.opacity = 0.6;
-      ring.style.display = "none";
-      preview.style.display = "none";
+      ring.style.display="none";
+      preview.style.display="none";
     } else {
       throw new Error(data.message || "Submission failed");
     }
-  } catch (err) {
-    loadingModal.style.display = "none"; // hide loader
-    showModal("❌ Error", "Submission failed! Please try again.");
-    console.error("Form submit error:", err);
+  }catch(err){
+    loadingModal.style.display="none";
+    showModal("❌ Error","Submission failed! Please try again.");
+    console.error("Form submit error:",err);
   }
 });
 
 document.getElementById("year").textContent = new Date().getFullYear();
-
 </script>
-
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
