@@ -14,9 +14,7 @@
   --light:#0a81ab;
   --gold:#c9a44c;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   min-height:100vh;
@@ -29,7 +27,6 @@ body{
   align-items:center;
   padding:20px;
 }
-
 .container{
   width:100%;
   max-width:480px;
@@ -40,7 +37,6 @@ body{
   box-shadow:0 30px 60px rgba(0,0,0,.45);
   border:1px solid rgba(255,255,255,.15);
 }
-
 .title{text-align:center;margin-bottom:26px}
 .title h1{
   margin:0;
@@ -69,8 +65,6 @@ input{
 
 input[readonly]{cursor:pointer;}
 
-input[type=file]{opacity:.6}
-
 .hint{
   font-size:.75rem;
   margin-top:-12px;
@@ -91,16 +85,6 @@ button:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 25px rgba(255,211,106,.4);
 }
-
-/* IMAGE PREVIEW */
-.preview{
-  display:none;
-  margin-bottom:18px;
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 0 20px rgba(201,164,76,.8);
-}
-.preview img{width:100%;display:block}
 
 /* COUNTDOWN RING */
 .ring{
@@ -131,7 +115,6 @@ button:hover{
   justify-content:center;
   z-index:999;
 }
-
 .modal-content,.picker-content{
   background:linear-gradient(180deg,var(--mid),var(--dark));
   border-radius:18px;
@@ -141,38 +124,9 @@ button:hover{
   text-align:center;
   border:1px solid rgba(255,255,255,.2);
 }
-
 .modal h2,.picker h2{
   font-family:Cinzel,serif;
   color:var(--gold);
-}
-
-/* FOOTER */
-.footer{
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 12px 10px;
-  text-align: center;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(2, 27, 47, 0.8);
-  backdrop-filter: blur(6px);
-  z-index: 1000;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
-}
-
-.footer strong {
-  color: var(--gold);
-  font-weight: 600;
-}
-
-@media (max-width: 480px) {
-  .footer {
-    font-size: 0.7rem;
-    padding: 10px 8px;
-  }
 }
 
 /* WHEEL PICKER */
@@ -201,31 +155,31 @@ button:hover{
 .confetti{position:fixed;inset:0;pointer-events:none}
 iframe{display:none}
 
-#loadingModal .modal-content::before{
-  content:'';
-  position:absolute;
-  top:-50%;
-  left:-50%;
-  width:200%;
-  height:200%;
-  background: linear-gradient(120deg, rgba(255,215,0,0.2), rgba(255,255,255,0.05), rgba(255,215,0,0.2));
-  transform:rotate(25deg);
-  animation: shimmer 3s infinite linear;
+/* FOOTER */
+.footer{
+  width:100%;
+  padding:14px 10px;
+  text-align:center;
+  font-size:0.75rem;
+  color:rgba(255,255,255,0.75);
+  letter-spacing:0.5px;
+}
+.footer strong{color:var(--gold); font-weight:600;}
+@media (max-width:480px){
+  .footer{font-size:0.7rem; padding:12px 8px;}
 }
 </style>
 </head>
 
 <body>
+
 <div class="container">
   <div class="title">
     <h1>THE IMPERIUM</h1>
     <p>MBBS 31's • Birthday Registry</p>
   </div>
 
-  <form id="birthdayForm" method="POST" enctype="multipart/form-data" target="hiddenFrame">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_subject" value="THE IMPERIUM Birthday Entry">
-
+  <form id="birthdayForm">
     <label>Full Name</label>
     <input name="name" required>
 
@@ -240,19 +194,14 @@ iframe{display:none}
       </svg>
     </div>
 
-    <label>Birthday Picture</label>
-    <input type="file" id="photo" name="photo" accept="image/*" disabled>
-    <div class="preview" id="preview"><img></div>
-
     <div class="hint" id="photoHint">
-      🎂 Upload unlocks only when your birthday is within 2 days
+      🎂 Upload not available on free plan
     </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit">Submit to THE IMPERIUM</button>
   </form>
 </div>
 
-<iframe name="hiddenFrame"></iframe>
 <canvas class="confetti" id="confetti"></canvas>
 
 <!-- DATE PICKER -->
@@ -263,11 +212,11 @@ iframe{display:none}
       <div class="wheel" id="monthWheel"></div>
       <div class="wheel" id="dayWheel"></div>
     </div>
-    <button onclick="confirmDOB()">Confirm</button>
+    <button type="button" onclick="confirmDOB()">Confirm</button>
   </div>
 </div>
 
-<!-- MODALS -->
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2 id="modalTitle">Notice</h2>
@@ -276,152 +225,125 @@ iframe{display:none}
   </div>
 </div>
 
-<div class="modal" id="loadingModal">
-  <div class="modal-content">
-    <h2>Processing...</h2>
-    <p>Please wait while we record your entry</p>
-  </div>
-</div>
-
 <footer class="footer">
-  <p>
-    © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
-  </p>
+  © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
 </footer>
 
 <script>
-// Month array
-const months=[...Array(12)].map((_,i)=>new Date(0,i).toLocaleString('default',{month:'long'}));
+const dobDisplay = document.getElementById("dobDisplay");
+const picker = document.getElementById("picker");
+const monthWheel = document.getElementById("monthWheel");
+const dayWheel = document.getElementById("dayWheel");
+const ring = document.getElementById("ring");
+const progress = document.getElementById("progress");
+const daysText = document.getElementById("daysText");
+const form = document.getElementById("birthdayForm");
 
-// DOM elements
-const dobDisplay=document.getElementById("dobDisplay");
-const picker=document.getElementById("picker");
-const monthWheel=document.getElementById("monthWheel");
-const dayWheel=document.getElementById("dayWheel");
-const photo=document.getElementById("photo");
-const preview=document.getElementById("preview");
-const previewImg=preview.querySelector("img");
-const hint=document.getElementById("photoHint");
-const ring=document.getElementById("ring");
-const progress=document.getElementById("progress");
-const daysText=document.getElementById("daysText");
-const form=document.getElementById("birthdayForm");
-const modal=document.getElementById("modal");
-const modalTitle=document.getElementById("modalTitle");
-const modalMessage=document.getElementById("modalMessage");
-const loadingModal=document.getElementById("loadingModal");
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalMessage = document.getElementById("modalMessage");
 
-// Populate month wheel
+// Month picker
+const months = [...Array(12)].map((_,i)=>new Date(0,i).toLocaleString('default',{month:'long'}));
 months.forEach((m,i)=>monthWheel.innerHTML+=`<div data-m="${i}">${m}</div>`);
 
-// Date picker logic
-dobDisplay.onclick=()=>picker.style.display="flex";
-monthWheel.onclick=e=>{
+// Picker logic
+dobDisplay.onclick = ()=>picker.style.display="flex";
+monthWheel.onclick = e=>{
   if(!e.target.dataset.m) return;
   [...monthWheel.children].forEach(d=>d.classList.remove("active"));
   e.target.classList.add("active");
-  dayWheel.innerHTML="";
-  const days=new Date(2024,Number(e.target.dataset.m)+1,0).getDate();
-  for(let i=1;i<=days;i++) dayWheel.innerHTML+=`<div>${i}</div>`;
+  dayWheel.innerHTML = "";
+  const days = new Date(2024, Number(e.target.dataset.m)+1,0).getDate();
+  for(let i=1;i<=days;i++) dayWheel.innerHTML += `<div>${i}</div>`;
 };
-dayWheel.onclick=e=>{
+dayWheel.onclick = e=>{
   [...dayWheel.children].forEach(d=>d.classList.remove("active"));
   e.target.classList.add("active");
 };
 
 function confirmDOB(){
-  const m=monthWheel.querySelector(".active");
-  const d=dayWheel.querySelector(".active");
-  if(!m||!d) return;
+  const m = monthWheel.querySelector(".active");
+  const d = dayWheel.querySelector(".active");
+  if(!m || !d) return;
 
-  const today=new Date();
-  let nextBirthday=new Date(today.getFullYear(),m.dataset.m,d.textContent);
+  const today = new Date();
+  let nextBirthday = new Date(today.getFullYear(), m.dataset.m, d.textContent);
   if(nextBirthday < today) nextBirthday.setFullYear(today.getFullYear()+1);
-  const diffDays=Math.ceil((nextBirthday-today)/86400000);
+  const diffDays = Math.ceil((nextBirthday-today)/86400000);
 
-  dobDisplay.value=`${d.textContent} ${months[m.dataset.m]}`;
+  dobDisplay.value = `${d.textContent} ${months[m.dataset.m]}`;
   picker.style.display="none";
 
   ring.style.display="block";
   const max=365;
-  const progressValue=(max-diffDays)/max;
-  progress.style.strokeDashoffset=314-(314*progressValue);
-  daysText.textContent=`${diffDays} day${diffDays!==1?'s':''}`;
-
-  if(diffDays<=2){
-    photo.disabled=false;
-    photo.style.opacity=1;
-    hint.textContent="🎉 Birthday incoming! Upload unlocked.";
-    confetti();
-  }else{
-    photo.disabled=true;
-    photo.value="";
-    photo.style.opacity=.6;
-    hint.textContent="🎂 Upload unlocks only when your birthday is within 2 days";
-  }
+  const progressValue = (max-diffDays)/max;
+  progress.style.strokeDashoffset = 314-(314*progressValue);
+  daysText.textContent = `${diffDays} day${diffDays!==1?'s':''}`;
 }
 
-// Image preview
-photo.onchange=()=>{const f=photo.files[0]; if(!f) return; preview.style.display="block"; previewImg.src=URL.createObjectURL(f);};
+// Modal
+function showModal(title,msg){
+  modalTitle.textContent = title;
+  modalMessage.textContent = msg;
+  modal.style.display="flex";
+}
+function closeModal(){ modal.style.display="none"; }
 
 // Confetti
 function confetti(){
   const c=document.getElementById("confetti");
   const ctx=c.getContext("2d");
-  c.width=innerWidth;c.height=innerHeight;
-  const pieces=[...Array(120)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*6+2,d:Math.random()*10}));
+  c.width=innerWidth; c.height=innerHeight;
+  const pieces=[...Array(120)].map(() => ({
+    x:Math.random()*c.width,
+    y:Math.random()*c.height,
+    r:Math.random()*6+2,
+    d:Math.random()*10
+  }));
   let t=0;
   (function draw(){
     ctx.clearRect(0,0,c.width,c.height);
-    pieces.forEach(p=>{ctx.fillStyle="#c9a44c";ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();p.y+=Math.cos(t+p.d)+1;});
+    pieces.forEach(p=>{
+      ctx.fillStyle="#c9a44c";
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+      p.y+=Math.cos(t+p.d)+1;
+    });
     t+=.05;
     if(t<6) requestAnimationFrame(draw);
   })();
 }
 
-// Modal functions
-function showModal(title,msg){modalTitle.textContent=title;modalMessage.textContent=msg;modal.style.display="flex";}
-function closeModal(){ modal.style.display="none"; }
-
-// Working AJAX submit (zero redirect)
-form.addEventListener("submit", async (e)=>{
+// Form Submit using FormSubmit
+form.addEventListener("submit", async e=>{
   e.preventDefault();
-  if(!dobDisplay.value || !form.name.value) return;
+  if(!form.name.value || !dobDisplay.value) return;
 
   const formData = new FormData();
   formData.append("name", form.name.value);
   formData.append("dob", dobDisplay.value);
-  if(photo.files[0]) formData.append("photo", photo.files[0]);
   formData.append("_captcha","false");
   formData.append("_subject","THE IMPERIUM Birthday Entry");
 
-  loadingModal.style.display="flex";
+  showModal("Processing...","Please wait while we record your entry");
 
   try{
     const res = await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com",{
       method:"POST",
-      body:formData,
-      headers:{ "Accept":"application/json" }
+      body: formData,
+      headers: { "Accept":"application/json" }
     });
-
-    loadingModal.style.display="none";
-
     const data = await res.json();
-
     if(res.ok && data.success !== false){
-      showModal("🎉 Success!","Your entry has been recorded in THE IMPERIUM.");
+      showModal("🎉 Success!","Your entry has been recorded.");
       form.reset();
-      photo.disabled = true;
-      photo.style.opacity = 0.6;
       ring.style.display="none";
-      preview.style.display="none";
-    } else {
-      throw new Error(data.message || "Submission failed");
-    }
-  }catch(err){
-    loadingModal.style.display="none";
+    } else throw new Error(data.message || "Submission failed");
+  } catch(err){
     showModal("❌ Error","Submission failed! Please try again.");
-    console.error("Form submit error:",err);
+    console.error(err);
   }
 });
 
