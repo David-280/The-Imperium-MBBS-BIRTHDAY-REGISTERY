@@ -25,14 +25,12 @@ body{
   color:#fff;
   display:flex;
   flex-direction:column;
-  justify-content:flex-start;
   align-items:center;
   padding:20px;
 }
 
 .container{
   width:100%;
-  display:flex;
   max-width:480px;
   background:rgba(255,255,255,.08);
   backdrop-filter:blur(14px);
@@ -69,6 +67,14 @@ input{
 }
 
 input[readonly]{cursor:pointer;}
+input[type=file]{opacity:.6}
+
+.hint{
+  font-size:.75rem;
+  margin-top:-12px;
+  margin-bottom:18px;
+  color:#bfe9ff;
+}
 
 button{
   background:linear-gradient(135deg,var(--gold),#ffd36a);
@@ -78,11 +84,20 @@ button{
   cursor:pointer;
   transition:.25s;
 }
-
 button:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 25px rgba(255,211,106,.4);
 }
+
+/* IMAGE PREVIEW */
+.preview{
+  display:none;
+  margin-bottom:18px;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 0 20px rgba(201,164,76,.8);
+}
+.preview img{width:100%;display:block}
 
 /* COUNTDOWN RING */
 .ring{
@@ -103,8 +118,8 @@ button:hover{
   dominant-baseline:middle;
 }
 
-/* MODAL */
-.modal{
+/* MODAL & PICKER */
+.modal,.picker{
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.6);
@@ -113,7 +128,8 @@ button:hover{
   justify-content:center;
   z-index:999;
 }
-.modal-content{
+
+.modal-content,.picker-content{
   background:linear-gradient(180deg,var(--mid),var(--dark));
   border-radius:18px;
   padding:28px;
@@ -122,7 +138,8 @@ button:hover{
   text-align:center;
   border:1px solid rgba(255,255,255,.2);
 }
-.modal h2{
+
+.modal h2,.picker h2{
   font-family:Cinzel,serif;
   color:var(--gold);
 }
@@ -140,45 +157,85 @@ button:hover{
   color:var(--gold);
   font-weight:600;
 }
-
-/* Mobile fine-tuning */
 @media (max-width:480px){
-  .footer{
-    font-size:0.7rem;
-    padding:12px 8px;
-  }
+  .footer{font-size:0.7rem;padding:12px 8px;}
 }
+
+/* WHEEL PICKER */
+.wheels{display:flex;gap:12px;margin:20px 0;}
+.wheel{
+  flex:1;
+  height:140px;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  border-radius:12px;
+  background:rgba(255,255,255,.12);
+}
+.wheel div{padding:12px;scroll-snap-align:center;}
+.wheel div.active{background:rgba(201,164,76,.25);border-radius:8px;}
+
+.confetti{position:fixed;inset:0;pointer-events:none}
+.page{width:100%;display:flex;justify-content:center;align-items:center;}
 </style>
 </head>
+
 <body>
 
-<div class="container">
-  <div class="title">
-    <h1>THE IMPERIUM</h1>
-    <p>MBBS 31's • Birthday Registry</p>
-  </div>
-
-  <!-- FORM: Regular POST for FormSubmit -->
-  <form id="birthdayForm" method="POST" action="https://formsubmit.co/officialdakeyed@gmail.com">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_subject" value="THE IMPERIUM Birthday Entry">
-
-    <label>Full Name</label>
-    <input name="name" required>
-
-    <label>Date of Birth</label>
-    <input name="dob" id="dobDisplay" placeholder="Select day & month" readonly required>
-
-    <div class="ring" id="ring" style="display:none">
-      <svg width="120" height="120">
-        <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
-        <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
-        <text x="60" y="60" id="daysText"></text>
-      </svg>
+<div class="page">
+  <div class="container">
+    <div class="title">
+      <h1>THE IMPERIUM</h1>
+      <p>MBBS 31's • Birthday Registry</p>
     </div>
 
-    <button type="submit">Submit to THE IMPERIUM</button>
-  </form>
+    <!-- FORM SUBMISSION VIA DIRECT POST (RELIABLE) -->
+    <form id="birthdayForm" method="POST" action="https://formsubmit.co/officialdakeyed@gmail.com" enctype="multipart/form-data">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_subject" value="THE IMPERIUM Birthday Entry">
+      <input type="hidden" name="_next" value="">
+
+      <label>Full Name</label>
+      <input name="name" required>
+
+      <label>Date of Birth</label>
+      <input id="dobDisplay" name="dob" placeholder="Select day & month" readonly required>
+
+      <div class="ring" id="ring" style="display:none">
+        <svg width="120" height="120">
+          <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
+          <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
+          <text x="60" y="60" id="daysText"></text>
+        </svg>
+      </div>
+
+      <label>Birthday Picture</label>
+      <input type="file" id="photo" name="photo" accept="image/*" disabled>
+      <div class="preview" id="preview"><img></div>
+
+      <div class="hint" id="photoHint">🎂 Upload unlocks only when your birthday is within 2 days</div>
+
+      <button type="submit">Submit to THE IMPERIUM</button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team</p>
+</footer>
+
+<canvas class="confetti" id="confetti"></canvas>
+
+<!-- DATE PICKER -->
+<div class="picker" id="picker">
+  <div class="picker-content">
+    <h2>Select Birthday</h2>
+    <div class="wheels">
+      <div class="wheel" id="monthWheel"></div>
+      <div class="wheel" id="dayWheel"></div>
+    </div>
+    <button onclick="confirmDOB()">Confirm</button>
+  </div>
 </div>
 
 <!-- MODAL -->
@@ -190,51 +247,114 @@ button:hover{
   </div>
 </div>
 
-<footer class="footer">
-  <p>© <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team</p>
-</footer>
-
 <script>
-const dobDisplay=document.getElementById("dobDisplay");
-const ring=document.getElementById("ring");
-const progress=document.getElementById("progress");
-const daysText=document.getElementById("daysText");
-const modal=document.getElementById("modal");
-const modalTitle=document.getElementById("modalTitle");
-const modalMessage=document.getElementById("modalMessage");
+const dobDisplay = document.getElementById("dobDisplay");
+const picker = document.getElementById("picker");
+const monthWheel = document.getElementById("monthWheel");
+const dayWheel = document.getElementById("dayWheel");
+const photo = document.getElementById("photo");
+const preview = document.getElementById("preview");
+const previewImg = preview.querySelector("img");
+const hint = document.getElementById("photoHint");
+const ring = document.getElementById("ring");
+const progress = document.getElementById("progress");
+const daysText = document.getElementById("daysText");
 
-// Date Picker Simple
-dobDisplay.onclick = function() {
-  let month = prompt("Enter your birth month (1-12):");
-  let day = prompt("Enter your birth day (1-31):");
-  if(month && day){
-    dobDisplay.value = `${day}/${month}`;
-    ring.style.display="block";
-    const today = new Date();
-    let nextBirthday = new Date(today.getFullYear(), month-1, day);
-    if(nextBirthday < today) nextBirthday.setFullYear(today.getFullYear()+1);
-    const diffDays = Math.ceil((nextBirthday - today)/86400000);
-    const max=365;
-    const progressValue=(max-diffDays)/max;
-    progress.style.strokeDashoffset=314-(314*progressValue);
-    daysText.textContent=`${diffDays} day${diffDays!==1?'s':''}`;
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalMessage = document.getElementById("modalMessage");
+
+// Month array
+const months = [...Array(12)].map((_,i)=>new Date(0,i).toLocaleString('default',{month:'long'}));
+months.forEach((m,i)=>monthWheel.innerHTML+=`<div data-m="${i}">${m}</div>`);
+
+// Picker logic
+dobDisplay.onclick=()=>picker.style.display="flex";
+monthWheel.onclick=e=>{
+  if(!e.target.dataset.m) return;
+  [...monthWheel.children].forEach(d=>d.classList.remove("active"));
+  e.target.classList.add("active");
+  dayWheel.innerHTML="";
+  const days=new Date(2024,Number(e.target.dataset.m)+1,0).getDate();
+  for(let i=1;i<=days;i++) dayWheel.innerHTML+=`<div>${i}</div>`;
+};
+dayWheel.onclick=e=>{
+  [...dayWheel.children].forEach(d=>d.classList.remove("active"));
+  e.target.classList.add("active");
+};
+
+function confirmDOB(){
+  const m=monthWheel.querySelector(".active");
+  const d=dayWheel.querySelector(".active");
+  if(!m||!d) return;
+
+  const today=new Date();
+  let nextBirthday=new Date(today.getFullYear(),m.dataset.m,d.textContent);
+  if(nextBirthday < today) nextBirthday.setFullYear(today.getFullYear()+1);
+  const diffDays=Math.ceil((nextBirthday-today)/86400000);
+
+  dobDisplay.value=`${d.textContent} ${months[m.dataset.m]}`;
+  picker.style.display="none";
+
+  ring.style.display="block";
+  const max=365;
+  const progressValue=(max-diffDays)/max;
+  progress.style.strokeDashoffset=314-(314*progressValue);
+  daysText.textContent=`${diffDays} day${diffDays!==1?'s':''}`;
+
+  if(diffDays<=2){
+    photo.disabled=false;
+    photo.style.opacity=1;
+    hint.textContent="🎉 Birthday incoming! Upload unlocked.";
+    confetti();
+  }else{
+    photo.disabled=true;
+    photo.value="";
+    photo.style.opacity=.6;
+    hint.textContent="🎂 Upload unlocks only when your birthday is within 2 days";
   }
 }
 
-// Modal functions
+// Image preview
+photo.onchange=()=>{ 
+  const f=photo.files[0];
+  if(!f) return;
+  preview.style.display="block";
+  previewImg.src=URL.createObjectURL(f);
+};
+
+// Confetti
+function confetti(){
+  const c=document.getElementById("confetti");
+  const ctx=c.getContext("2d");
+  c.width=innerWidth;c.height=innerHeight;
+  const pieces=[...Array(120)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*6+2,d:Math.random()*10}));
+  let t=0;
+  (function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pieces.forEach(p=>{
+      ctx.fillStyle="#c9a44c";
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+      p.y+=Math.cos(t+p.d)+1;
+    });
+    t+=.05;
+    if(t<6) requestAnimationFrame(draw);
+  })();
+}
+
+// Custom modal
 function showModal(title,msg){
   modalTitle.textContent=title;
   modalMessage.textContent=msg;
   modal.style.display="flex";
 }
-function closeModal(){
-  modal.style.display="none";
-}
+function closeModal(){ modal.style.display="none"; }
 
-// Footer year
+// Set current year in footer
 document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 
 </body>
 </html>
-
