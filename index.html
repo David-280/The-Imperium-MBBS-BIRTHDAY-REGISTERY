@@ -435,41 +435,52 @@ function closeModal(){ modal.style.display="none"; }
 const loadingModal = document.getElementById("loadingModal");
 
 // Modify your form submit code
-form.addEventListener("submit", async (e)=>{
+// === DROP-IN AJAX SUBMIT (Zero redirect, works with static hosting) ===
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  if(!dobDisplay.value || !form.name.value) return;
+  if (!dobDisplay.value || !form.name.value) return;
 
-  const formData=new FormData();
-  formData.append("name",form.name.value);
-  formData.append("dob",dobDisplay.value);
-  if(photo.files[0]) formData.append("photo",photo.files[0]);
-  formData.append("_captcha","false");
-  formData.append("_subject","THE IMPERIUM Birthday Entry");
+  const formData = new FormData();
+  formData.append("name", form.name.value);
+  formData.append("dob", dobDisplay.value);
+  if (photo.files[0]) formData.append("photo", photo.files[0]);
+  formData.append("_captcha", "false");
+  formData.append("_subject", "THE IMPERIUM Birthday Entry");
 
-  // Show loading modal immediately
-  loadingModal.style.display="flex";
+  // Show loading modal
+  loadingModal.style.display = "flex";
 
-  try{
-    const res = await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com",{
-      method:"POST",
-      body: formData
+  try {
+    // Using Formsubmit.co JSON endpoint to ensure AJAX works
+    const res = await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com", {
+      method: "POST",
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
     });
-    
-    loadingModal.style.display="none"; // Hide loading modal
 
-    if(res.ok){
-      showModal("🎉 Success!","Your entry has been recorded in OUr Datalist.");
+    loadingModal.style.display = "none"; // hide loader
+
+    const data = await res.json();
+
+    if (res.ok && data.success !== false) {
+      showModal("🎉 Success!", "Your entry has been recorded in THE IMPERIUM.");
       form.reset();
-      photo.disabled=true;
-      photo.style.opacity=.6;
-      ring.style.display="none";
-      preview.style.display="none";
-    } else throw new Error("Submission failed");
-  } catch(err){
-    loadingModal.style.display="none"; // Hide loading modal
-    showModal("❌ Error","Submission failed! Please try again.");
+      photo.disabled = true;
+      photo.style.opacity = 0.6;
+      ring.style.display = "none";
+      preview.style.display = "none";
+    } else {
+      throw new Error(data.message || "Submission failed");
+    }
+  } catch (err) {
+    loadingModal.style.display = "none"; // hide loader
+    showModal("❌ Error", "Submission failed! Please try again.");
+    console.error("Form submit error:", err);
   }
 });
+
 document.getElementById("year").textContent = new Date().getFullYear();
 
 </script>
@@ -477,6 +488,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 </body>
 </html>
+
 
 
 
