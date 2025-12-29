@@ -431,34 +431,7 @@ function showModal(title,msg){
 function closeModal(){ modal.style.display="none"; }
 
 // Form submit with AJAX
-form.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  if(!dobDisplay.value || !form.name.value) return;
 
-  const formData=new FormData();
-  formData.append("name",form.name.value);
-  formData.append("dob",dobDisplay.value);
-  if(photo.files[0]) formData.append("photo",photo.files[0]);
-  formData.append("_captcha","false");
-  formData.append("_subject","THE IMPERIUM Birthday Entry");
-
-  try{
-    const res=await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com",{
-      method:"POST",
-      body:formData
-    });
-    if(res.ok){
-      showModal("🎉 Success!","Your entry has been recorded in Our Datalist.");
-      form.reset();
-      photo.disabled=true;
-      photo.style.opacity=.6;
-      ring.style.display="none";
-      preview.style.display="none";
-    }else throw new Error("Submission failed");
-  }catch(err){
-    showModal("❌ Error","Submission failed! Please try again.");
-  }
-});
 const loadingModal = document.getElementById("loadingModal");
 
 // Modify your form submit code
@@ -504,6 +477,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 </body>
 </html>
+
 
 
 
