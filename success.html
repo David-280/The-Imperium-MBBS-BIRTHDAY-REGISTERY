@@ -2,97 +2,288 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>THE IMPERIUM | Birthday Entry Success</title>
+<title>THE IMPERIUM | Birthday Registry</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:Poppins,sans-serif;
-  background:radial-gradient(circle at top,#0a81ab,#021b2f 70%);
-  color:#fff;
-  text-align:center;
+:root{
+  --dark:#021b2f; --mid:#033f63; --light:#0a81ab; --gold:#c9a44c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh;
+  background:radial-gradient(circle at top,var(--light),var(--dark) 70%);
+  font-family:Poppins,sans-serif; color:#fff;
+  display:flex; flex-direction:column; align-items:center;
   padding:20px;
 }
 .container{
+  width:100%; max-width:480px;
   background:rgba(255,255,255,.08);
   backdrop-filter:blur(14px);
   border-radius:20px;
   padding:32px 26px 36px;
   box-shadow:0 30px 60px rgba(0,0,0,.45);
   border:1px solid rgba(255,255,255,.15);
-  max-width:480px;
-  width:100%;
 }
-h1{
-  font-family:Cinzel,serif;
-  color:#c9a44c;
-  margin-bottom:20px;
-  letter-spacing:2px;
+.title{text-align:center;margin-bottom:26px}
+.title h1{
+  margin:0; font-family:Cinzel,serif;
+  letter-spacing:2px; color:var(--gold);
 }
-p{
-  font-size:1rem;
-  opacity:.85;
-  margin-bottom:30px;
+.title p{font-size:.85rem;opacity:.85;margin-top:6px;}
+label{display:block;font-size:.85rem;margin-bottom:6px}
+input,button{
+  width:100%; padding:14px 15px;
+  border-radius:12px; border:none;
+  font-size:.95rem;
+}
+input{
+  background:rgba(255,255,255,.15);
+  color:#fff; margin-bottom:18px;
+  cursor:pointer;
+}
+input[readonly]{cursor:pointer;}
+input[type=file]{opacity:.6}
+.hint{
+  font-size:.75rem; margin-top:-12px;
+  margin-bottom:18px; color:#bfe9ff;
 }
 button{
-  background:linear-gradient(135deg,#c9a44c,#ffd36a);
-  color:#021b2f;
-  font-weight:600;
-  letter-spacing:1px;
-  padding:14px 20px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),#ffd36a);
+  color:#021b2f; font-weight:600;
+  letter-spacing:1px; cursor:pointer;
   transition:.25s;
 }
 button:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 25px rgba(255,211,106,.4);
 }
+.preview{
+  display:none; margin-bottom:18px;
+  border-radius:14px; overflow:hidden;
+  box-shadow:0 0 20px rgba(201,164,76,.8);
+}
+.preview img{width:100%;display:block;}
+.ring{
+  width:120px;height:120px;
+  margin:10px auto 20px;
+}
+.ring svg{transform:rotate(-90deg);}
+.ring text{
+  transform:rotate(90deg);
+  transform-origin:50% 50%;
+  fill:#fff;font-size:11px;
+  text-anchor:middle;
+  dominant-baseline:middle;
+}
+.picker{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.6);
+  display:none; align-items:center;
+  justify-content:center; z-index:999;
+}
+.picker-content{
+  background:linear-gradient(180deg,var(--mid),var(--dark));
+  border-radius:18px; padding:28px;
+  max-width:340px; width:90%;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.2);
+}
+.picker h2{
+  font-family:Cinzel,serif;
+  color:var(--gold);
+}
+.wheels{display:flex;gap:12px;margin:20px 0;}
+.wheel{
+  flex:1;height:140px;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  border-radius:12px;
+  background:rgba(255,255,255,.12);
+}
+.wheel div{
+  padding:12px;
+  scroll-snap-align:center;
+}
+.wheel div.active{
+  background:rgba(201,164,76,.25);
+  border-radius:8px;
+}
 .footer{
-  margin-top:40px;
-  font-size:.75rem;
+  width:100%; padding:14px 10px;
+  text-align:center; font-size:.75rem;
   color:rgba(255,255,255,.75);
 }
-.footer strong{color:#c9a44c;}
+.footer strong{color:var(--gold);}
+.confetti{
+  position:fixed; inset:0;
+  pointer-events:none;
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
-  <h1>🎉 Success!</h1>
-  <p id="message">Your birthday entry has been recorded.</p>
-  <button onclick="goBack()">Return to Form</button>
+  <div class="title">
+    <h1>THE IMPERIUM</h1>
+    <p>MBBS 31's • Birthday Registry</p>
+  </div>
+
+  <form
+    action="https://formsubmit.co/officialdakeyed@gmail.com"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_subject" value="THE IMPERIUM | Birthday Registry">
+    <input type="hidden" name="_next" value="https://david-280.github.io/The-Imperium-MBBS-BIRTHDAY-REGISTERY/success.html">
+
+    <label>Full Name</label>
+    <input name="name" required>
+
+    <label>Date of Birth</label>
+    <input id="dobDisplay" name="dob" placeholder="Select day & month" readonly required>
+
+    <div class="ring" id="ring" style="display:none">
+      <svg width="120" height="120">
+        <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
+        <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8"
+          fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
+        <text x="60" y="60" id="daysText"></text>
+      </svg>
+    </div>
+
+    <label>Birthday Picture</label>
+    <input type="file" id="photo" name="photo" accept="image/*" disabled>
+    <div class="preview" id="preview"><img></div>
+    <div class="hint" id="photoHint">
+      🎂 Upload unlocks only when your birthday is within 2 days
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
 </div>
 
 <footer class="footer">
   © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
 </footer>
 
+<canvas class="confetti" id="confetti"></canvas>
+
+<!-- DATE PICKER -->
+<div class="picker" id="picker">
+  <div class="picker-content">
+    <h2>Select Birthday</h2>
+    <div class="wheels">
+      <div class="wheel" id="monthWheel"></div>
+      <div class="wheel" id="dayWheel"></div>
+    </div>
+    <button onclick="confirmDOB()">Confirm</button>
+  </div>
+</div>
+
 <script>
-// Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Personalize message if name is in query string
-const params = new URLSearchParams(window.location.search);
-const name = params.get("name");
-if(name){
-  document.getElementById("message").textContent = `🎉 Success, ${decodeURIComponent(name)}! Your birthday entry has been recorded.`;
+const dobDisplay = document.getElementById("dobDisplay");
+const picker = document.getElementById("picker");
+const monthWheel = document.getElementById("monthWheel");
+const dayWheel = document.getElementById("dayWheel");
+const photo = document.getElementById("photo");
+const preview = document.getElementById("preview");
+const previewImg = preview.querySelector("img");
+const hint = document.getElementById("photoHint");
+const ring = document.getElementById("ring");
+const progress = document.getElementById("progress");
+const daysText = document.getElementById("daysText");
+const confettiCanvas = document.getElementById("confetti");
+
+const months = [...Array(12)].map((_,i)=>
+  new Date(0,i).toLocaleString("default",{month:"long"})
+);
+months.forEach((m,i)=>monthWheel.innerHTML+=`<div data-m="${i}">${m}</div>`);
+
+dobDisplay.onclick = ()=> picker.style.display="flex";
+
+monthWheel.onclick = e=>{
+  if(!e.target.dataset.m) return;
+  [...monthWheel.children].forEach(d=>d.classList.remove("active"));
+  e.target.classList.add("active");
+  dayWheel.innerHTML="";
+  const days=new Date(2024,Number(e.target.dataset.m)+1,0).getDate();
+  for(let i=1;i<=days;i++) dayWheel.innerHTML+=`<div>${i}</div>`;
+};
+
+dayWheel.onclick = e=>{
+  [...dayWheel.children].forEach(d=>d.classList.remove("active"));
+  e.target.classList.add("active");
+};
+
+function confirmDOB(){
+  const m=monthWheel.querySelector(".active");
+  const d=dayWheel.querySelector(".active");
+  if(!m||!d) return;
+
+  const today=new Date();
+  let nextBirthday=new Date(today.getFullYear(),m.dataset.m,d.textContent);
+  if(nextBirthday<today) nextBirthday.setFullYear(today.getFullYear()+1);
+  const diffDays=Math.ceil((nextBirthday-today)/86400000);
+
+  dobDisplay.value=`${d.textContent} ${months[m.dataset.m]}`;
+  picker.style.display="none";
+
+  ring.style.display="block";
+  progress.style.strokeDashoffset = 314-(314*((365-diffDays)/365));
+  daysText.textContent = `${diffDays} day${diffDays!==1?"s":""}`;
+
+  if(diffDays<=2){
+    photo.disabled=false;
+    photo.style.opacity=1;
+    hint.textContent="🎉 Birthday incoming! Upload unlocked.";
+    confetti();
+  } else {
+    photo.disabled=true;
+    photo.value="";
+    photo.style.opacity=.6;
+    hint.textContent="🎂 Upload unlocks only when your birthday is within 2 days";
+  }
 }
 
-// Return button
-function goBack(){
-  window.location.href = "index.html";
-}
+photo.onchange=()=>{
+  const f=photo.files[0];
+  if(!f) return;
+  preview.style.display="block";
+  previewImg.src=URL.createObjectURL(f);
+};
 
-// Auto-return after 10 seconds
-setTimeout(()=>{ window.location.href = "index.html"; }, 10000);
+function confetti(){
+  const ctx=confettiCanvas.getContext("2d");
+  confettiCanvas.width=innerWidth;
+  confettiCanvas.height=innerHeight;
+  const pieces=[...Array(120)].map(()=>({
+    x:Math.random()*confettiCanvas.width,
+    y:Math.random()*confettiCanvas.height,
+    r:Math.random()*6+2,
+    d:Math.random()*10
+  }));
+  let t=0;
+  (function draw(){
+    ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    pieces.forEach(p=>{
+      ctx.fillStyle="#c9a44c";
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+      p.y+=Math.cos(t+p.d)+1;
+    });
+    t+=.05;
+    if(t<6) requestAnimationFrame(draw);
+  })();
+}
 </script>
 
 </body>
