@@ -136,11 +136,11 @@ button:hover{
     action="https://formsubmit.co/officialdakeyed@gmail.com"
     method="POST"
     enctype="multipart/form-data"
-  >
+>
     <input type="hidden" name="_captcha" value="false">
     <input type="hidden" name="_template" value="table">
     <input type="hidden" name="_subject" value="THE IMPERIUM | Birthday Registry">
-    <input type="hidden" name="_next" value="https://david-280.github.io/The-Imperium-MBBS-BIRTHDAY-REGISTERY/success.html">
+    <input type="hidden" name="_next" value="https://david-280.github.io/The-Imperium-MBBS-BIRTHDAY-REGISTERY/success.html?name={name}">
 
     <label>Full Name</label>
     <input name="name" required>
@@ -149,12 +149,12 @@ button:hover{
     <input id="dobDisplay" name="dob" placeholder="Select day & month" readonly required>
 
     <div class="ring" id="ring" style="display:none">
-      <svg width="120" height="120">
-        <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
-        <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8"
-          fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
-        <text x="60" y="60" id="daysText"></text>
-      </svg>
+        <svg width="120" height="120">
+            <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
+            <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8"
+                fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
+            <text x="60" y="60" id="daysText"></text>
+        </svg>
     </div>
 
     <label>Birthday Picture</label>
@@ -165,7 +165,8 @@ button:hover{
     </div>
 
     <button type="submit">Submit</button>
-  </form>
+</form>
+
 </div>
 
 <footer class="footer">
@@ -288,3 +289,4 @@ function confetti(){
 
 </body>
 </html>
+
