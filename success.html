@@ -2,152 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Submission Successful | THE IMPERIUM</title>
+<title>THE IMPERIUM | Birthday Entry Success</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --dark:#021b2f;
-  --mid:#033f63;
-  --light:#0a81ab;
-  --gold:#c9a44c;
-}
-*{box-sizing:border-box}
-body{
+body {
   margin:0;
   min-height:100vh;
   display:flex;
-  align-items:center;
   justify-content:center;
-  background:radial-gradient(circle at top,var(--light),var(--dark) 70%);
+  align-items:center;
   font-family:Poppins,sans-serif;
+  background:radial-gradient(circle at top,#0a81ab,#021b2f 70%);
   color:#fff;
+  text-align:center;
   padding:20px;
-  overflow:hidden;
 }
-.card{
-  max-width:420px;
-  width:100%;
+.container{
   background:rgba(255,255,255,.08);
   backdrop-filter:blur(14px);
   border-radius:20px;
-  padding:38px 30px;
-  text-align:center;
-  border:1px solid rgba(255,255,255,.15);
+  padding:32px 26px 36px;
   box-shadow:0 30px 60px rgba(0,0,0,.45);
-  position:relative;
-  z-index:2;
+  border:1px solid rgba(255,255,255,.15);
+  max-width:480px;
+  width:100%;
 }
 h1{
   font-family:Cinzel,serif;
-  color:var(--gold);
+  color:#c9a44c;
+  margin-bottom:20px;
   letter-spacing:2px;
-  margin-bottom:14px;
 }
 p{
-  font-size:.95rem;
-  opacity:.9;
-  line-height:1.6;
-  margin-bottom:26px;
+  font-size:1rem;
+  opacity:.85;
+  margin-bottom:30px;
 }
-a{
-  display:inline-block;
-  padding:14px 24px;
-  border-radius:12px;
-  background:linear-gradient(135deg,var(--gold),#ffd36a);
+button{
+  background:linear-gradient(135deg,#c9a44c,#ffd36a);
   color:#021b2f;
-  text-decoration:none;
   font-weight:600;
   letter-spacing:1px;
+  padding:14px 20px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
   transition:.25s;
 }
-a:hover{
+button:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 25px rgba(255,211,106,.4);
 }
-.count{
-  font-size:.8rem;
-  opacity:.75;
-  margin-top:10px;
+.footer{
+  margin-top:40px;
+  font-size:.75rem;
+  color:rgba(255,255,255,.75);
 }
-
-/* Confetti */
-canvas{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:1;
-}
+.footer strong{color:#c9a44c;}
 </style>
 </head>
-
 <body>
 
-<canvas id="confetti"></canvas>
-
-<div class="card">
-  <h1>🎉 Success</h1>
-  <p>
-    Your birthday entry has been successfully recorded.<br>
-    Welcome to <strong>THE IMPERIUM</strong>.
-  </p>
-
-  <a href="index.html">Return Now</a>
-
-  <div class="count">
-    Auto-returning in <strong><span id="countdown">10</span></strong> seconds…
-  </div>
+<div class="container">
+  <h1>🎉 Success!</h1>
+  <p id="message">Your birthday entry has been recorded.</p>
+  <button onclick="goBack()">Return to Form</button>
 </div>
 
+<footer class="footer">
+  © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
+</footer>
+
 <script>
-/* Countdown & redirect */
-let seconds = 10;
-const target = "index.html";
-const countdown = document.getElementById("countdown");
+// Footer year
+document.getElementById("year").textContent = new Date().getFullYear();
 
-const timer = setInterval(() => {
-  seconds--;
-  countdown.textContent = seconds;
-  if (seconds <= 0) {
-    clearInterval(timer);
-    window.location.href = target;
-  }
-}, 1000);
-
-/* Confetti animation */
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
-
-function resize(){
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
+// Personalize message if name is in query string
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+if(name){
+  document.getElementById("message").textContent = `🎉 Success, ${decodeURIComponent(name)}! Your birthday entry has been recorded.`;
 }
-resize();
-addEventListener("resize", resize);
 
-const pieces = Array.from({length:140}, () => ({
-  x: Math.random()*canvas.width,
-  y: Math.random()*canvas.height - canvas.height,
-  r: Math.random()*6 + 3,
-  d: Math.random()*6 + 4
-}));
+// Return button
+function goBack(){
+  window.location.href = "index.html";
+}
 
-let t = 0;
-(function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "#c9a44c";
-  pieces.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fill();
-    p.y += p.d;
-    if(p.y > canvas.height) p.y = -10;
-  });
-  t++;
-  if(t < 300) requestAnimationFrame(draw);
-})();
+// Auto-return after 10 seconds
+setTimeout(()=>{ window.location.href = "index.html"; }, 10000);
 </script>
 
 </body>
