@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Submission Successful | THE IMPERIUM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --dark:#021b2f;
+  --mid:#033f63;
+  --light:#0a81ab;
+  --gold:#c9a44c;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:radial-gradient(circle at top,var(--light),var(--dark) 70%);
+  font-family:Poppins,sans-serif;
+  color:#fff;
+  padding:20px;
+  overflow:hidden;
+}
+.card{
+  max-width:420px;
+  width:100%;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(14px);
+  border-radius:20px;
+  padding:38px 30px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 30px 60px rgba(0,0,0,.45);
+  position:relative;
+  z-index:2;
+}
+h1{
+  font-family:Cinzel,serif;
+  color:var(--gold);
+  letter-spacing:2px;
+  margin-bottom:14px;
+}
+p{
+  font-size:.95rem;
+  opacity:.9;
+  line-height:1.6;
+  margin-bottom:26px;
+}
+a{
+  display:inline-block;
+  padding:14px 24px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--gold),#ffd36a);
+  color:#021b2f;
+  text-decoration:none;
+  font-weight:600;
+  letter-spacing:1px;
+  transition:.25s;
+}
+a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(255,211,106,.4);
+}
+.count{
+  font-size:.8rem;
+  opacity:.75;
+  margin-top:10px;
+}
+
+/* Confetti */
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card">
+  <h1>🎉 Success</h1>
+  <p>
+    Your birthday entry has been successfully recorded.<br>
+    Welcome to <strong>THE IMPERIUM</strong>.
+  </p>
+
+  <a href="index.html">Return Now</a>
+
+  <div class="count">
+    Auto-returning in <strong><span id="countdown">10</span></strong> seconds…
+  </div>
+</div>
+
+<script>
+/* Countdown & redirect */
+let seconds = 10;
+const target = "index.html";
+const countdown = document.getElementById("countdown");
+
+const timer = setInterval(() => {
+  seconds--;
+  countdown.textContent = seconds;
+  if (seconds <= 0) {
+    clearInterval(timer);
+    window.location.href = target;
+  }
+}, 1000);
+
+/* Confetti animation */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+function resize(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+resize();
+addEventListener("resize", resize);
+
+const pieces = Array.from({length:140}, () => ({
+  x: Math.random()*canvas.width,
+  y: Math.random()*canvas.height - canvas.height,
+  r: Math.random()*6 + 3,
+  d: Math.random()*6 + 4
+}));
+
+let t = 0;
+(function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#c9a44c";
+  pieces.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+    p.y += p.d;
+    if(p.y > canvas.height) p.y = -10;
+  });
+  t++;
+  if(t < 300) requestAnimationFrame(draw);
+})();
+</script>
+
+</body>
+</html>
