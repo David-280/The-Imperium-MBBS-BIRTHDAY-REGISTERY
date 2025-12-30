@@ -12,83 +12,164 @@
 }
 *{box-sizing:border-box}
 body{
-  margin:0; min-height:100vh; background:radial-gradient(circle at top,var(--light),var(--dark) 70%);
-  font-family:Poppins,sans-serif; color:#fff; display:flex; flex-direction:column; align-items:center; padding:20px;
+  margin:0; min-height:100vh;
+  background:radial-gradient(circle at top,var(--light),var(--dark) 70%);
+  font-family:Poppins,sans-serif; color:#fff;
+  display:flex; flex-direction:column; align-items:center;
+  padding:20px;
 }
 .container{
-  width:100%; max-width:480px; background:rgba(255,255,255,.08); backdrop-filter:blur(14px);
-  border-radius:20px; padding:32px 26px 36px; box-shadow:0 30px 60px rgba(0,0,0,.45);
+  width:100%; max-width:480px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(14px);
+  border-radius:20px;
+  padding:32px 26px 36px;
+  box-shadow:0 30px 60px rgba(0,0,0,.45);
   border:1px solid rgba(255,255,255,.15);
 }
 .title{text-align:center;margin-bottom:26px}
-.title h1{margin:0; font-family:Cinzel,serif; letter-spacing:2px; color:var(--gold);}
+.title h1{
+  margin:0; font-family:Cinzel,serif;
+  letter-spacing:2px; color:var(--gold);
+}
 .title p{font-size:.85rem;opacity:.85;margin-top:6px;}
 label{display:block;font-size:.85rem;margin-bottom:6px}
-input,button{width:100%; padding:14px 15px; border-radius:12px; border:none; font-size:.95rem;}
-input{background:rgba(255,255,255,.15); color:#fff; margin-bottom:18px; cursor:pointer;}
+input,button{
+  width:100%; padding:14px 15px;
+  border-radius:12px; border:none;
+  font-size:.95rem;
+}
+input{
+  background:rgba(255,255,255,.15);
+  color:#fff; margin-bottom:18px;
+  cursor:pointer;
+}
 input[readonly]{cursor:pointer;}
 input[type=file]{opacity:.6}
-.hint{font-size:.75rem; margin-top:-12px; margin-bottom:18px; color:#bfe9ff;}
-button{background:linear-gradient(135deg,var(--gold),#ffd36a); color:#021b2f; font-weight:600; letter-spacing:1px; cursor:pointer; transition:.25s;}
-button:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(255,211,106,.4);}
-.preview{display:none; margin-bottom:18px; border-radius:14px; overflow:hidden; box-shadow:0 0 20px rgba(201,164,76,.8);}
+.hint{
+  font-size:.75rem; margin-top:-12px;
+  margin-bottom:18px; color:#bfe9ff;
+}
+button{
+  background:linear-gradient(135deg,var(--gold),#ffd36a);
+  color:#021b2f; font-weight:600;
+  letter-spacing:1px; cursor:pointer;
+  transition:.25s;
+}
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(255,211,106,.4);
+}
+.preview{
+  display:none; margin-bottom:18px;
+  border-radius:14px; overflow:hidden;
+  box-shadow:0 0 20px rgba(201,164,76,.8);
+}
 .preview img{width:100%;display:block;}
-.ring{width:120px;height:120px;margin:10px auto 20px;position:relative;}
+.ring{
+  width:120px;height:120px;
+  margin:10px auto 20px;
+}
 .ring svg{transform:rotate(-90deg);}
-.ring text{transform:rotate(90deg);transform-origin:50% 50%;fill:#fff;font-size:11px;text-anchor:middle;dominant-baseline:middle;}
-.modal,.picker{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:999;}
-.modal-content,.picker-content{background:linear-gradient(180deg,var(--mid),var(--dark));border-radius:18px;padding:28px;max-width:340px;width:90%;text-align:center;border:1px solid rgba(255,255,255,.2);}
-.modal h2,.picker h2{font-family:Cinzel,serif;color:var(--gold);}
-.footer{width:100%;padding:14px 10px;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.75);letter-spacing:0.5px;}
-.footer strong{color:var(--gold); font-weight:600;}
-@media (max-width:480px){.footer{font-size:0.7rem;padding:12px 8px;}}
+.ring text{
+  transform:rotate(90deg);
+  transform-origin:50% 50%;
+  fill:#fff;font-size:11px;
+  text-anchor:middle;
+  dominant-baseline:middle;
+}
+.picker{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.6);
+  display:none; align-items:center;
+  justify-content:center; z-index:999;
+}
+.picker-content{
+  background:linear-gradient(180deg,var(--mid),var(--dark));
+  border-radius:18px; padding:28px;
+  max-width:340px; width:90%;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.2);
+}
+.picker h2{
+  font-family:Cinzel,serif;
+  color:var(--gold);
+}
 .wheels{display:flex;gap:12px;margin:20px 0;}
-.wheel{flex:1;height:140px;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:12px;background:rgba(255,255,255,.12);}
-.wheel div{padding:12px;scroll-snap-align:center;}
-.wheel div.active{background:rgba(201,164,76,.25);border-radius:8px;}
-.confetti{position:fixed;inset:0;pointer-events:none;}
-.page{width:100%;display:flex;justify-content:center;align-items:center;}
+.wheel{
+  flex:1;height:140px;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  border-radius:12px;
+  background:rgba(255,255,255,.12);
+}
+.wheel div{
+  padding:12px;
+  scroll-snap-align:center;
+}
+.wheel div.active{
+  background:rgba(201,164,76,.25);
+  border-radius:8px;
+}
+.footer{
+  width:100%; padding:14px 10px;
+  text-align:center; font-size:.75rem;
+  color:rgba(255,255,255,.75);
+}
+.footer strong{color:var(--gold);}
+.confetti{
+  position:fixed; inset:0;
+  pointer-events:none;
+}
 </style>
 </head>
+
 <body>
 
-<div class="page">
-  <div class="container">
-    <div class="title">
-      <h1>THE IMPERIUM</h1>
-      <p>MBBS 31's • Birthday Registry</p>
+<div class="container">
+  <div class="title">
+    <h1>THE IMPERIUM</h1>
+    <p>MBBS 31's • Birthday Registry</p>
+  </div>
+
+  <form
+    action="https://formsubmit.co/officialdakeyed@gmail.com"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_subject" value="THE IMPERIUM | Birthday Registry">
+    <input type="hidden" name="_next" value="https://david-280.github.io/The-Imperium-MBBS-BIRTHDAY-REGISTERY/success.html">
+
+    <label>Full Name</label>
+    <input name="name" required>
+
+    <label>Date of Birth</label>
+    <input id="dobDisplay" name="dob" placeholder="Select day & month" readonly required>
+
+    <div class="ring" id="ring" style="display:none">
+      <svg width="120" height="120">
+        <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
+        <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8"
+          fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
+        <text x="60" y="60" id="daysText"></text>
+      </svg>
     </div>
 
-    <form id="birthdayForm" enctype="multipart/form-data">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_subject" value="THE IMPERIUM Birthday Entry">
+    <label>Birthday Picture</label>
+    <input type="file" id="photo" name="photo" accept="image/*" disabled>
+    <div class="preview" id="preview"><img></div>
+    <div class="hint" id="photoHint">
+      🎂 Upload unlocks only when your birthday is within 2 days
+    </div>
 
-      <label>Full Name</label>
-      <input name="name" required>
-
-      <label>Date of Birth</label>
-      <input id="dobDisplay" name="dob" placeholder="Select day & month" readonly required>
-
-      <div class="ring" id="ring" style="display:none">
-        <svg width="120" height="120">
-          <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
-          <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
-          <text x="60" y="60" id="daysText"></text>
-        </svg>
-      </div>
-
-      <label>Birthday Picture</label>
-      <input type="file" id="photo" name="photo" accept="image/*" disabled>
-      <div class="preview" id="preview"><img></div>
-      <div class="hint" id="photoHint">🎂 Upload unlocks only when your birthday is within 2 days</div>
-
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+    <button type="submit">Submit</button>
+  </form>
 </div>
 
 <footer class="footer">
-  <p>© <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team</p>
+  © <span id="year"></span> <strong>The Imperium</strong> — MBBS Media Team
 </footer>
 
 <canvas class="confetti" id="confetti"></canvas>
@@ -105,24 +186,9 @@ button:hover{transform:translateY(-2px); box-shadow:0 10px 25px rgba(255,211,106
   </div>
 </div>
 
-<!-- MODALS -->
-<div class="modal" id="loadingModal">
-  <div class="modal-content"><h2>Processing...</h2><p>Please wait while we record your entry.</p></div>
-</div>
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h2 id="modalTitle">Notice</h2>
-    <p id="modalMessage"></p>
-    <button onclick="closeModal()">Understood</button>
-  </div>
-</div>
-
 <script>
-// Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Date picker & ring logic
 const dobDisplay = document.getElementById("dobDisplay");
 const picker = document.getElementById("picker");
 const monthWheel = document.getElementById("monthWheel");
@@ -135,17 +201,15 @@ const ring = document.getElementById("ring");
 const progress = document.getElementById("progress");
 const daysText = document.getElementById("daysText");
 const confettiCanvas = document.getElementById("confetti");
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalMessage = document.getElementById("modalMessage");
-const loadingModal = document.getElementById("loadingModal");
 
-// Month wheel
-const months = [...Array(12)].map((_,i)=>new Date(0,i).toLocaleString('default',{month:'long'}));
+const months = [...Array(12)].map((_,i)=>
+  new Date(0,i).toLocaleString("default",{month:"long"})
+);
 months.forEach((m,i)=>monthWheel.innerHTML+=`<div data-m="${i}">${m}</div>`);
 
-dobDisplay.onclick=()=>picker.style.display="flex";
-monthWheel.onclick=e=>{
+dobDisplay.onclick = ()=> picker.style.display="flex";
+
+monthWheel.onclick = e=>{
   if(!e.target.dataset.m) return;
   [...monthWheel.children].forEach(d=>d.classList.remove("active"));
   e.target.classList.add("active");
@@ -153,7 +217,8 @@ monthWheel.onclick=e=>{
   const days=new Date(2024,Number(e.target.dataset.m)+1,0).getDate();
   for(let i=1;i<=days;i++) dayWheel.innerHTML+=`<div>${i}</div>`;
 };
-dayWheel.onclick=e=>{
+
+dayWheel.onclick = e=>{
   [...dayWheel.children].forEach(d=>d.classList.remove("active"));
   e.target.classList.add("active");
 };
@@ -165,24 +230,22 @@ function confirmDOB(){
 
   const today=new Date();
   let nextBirthday=new Date(today.getFullYear(),m.dataset.m,d.textContent);
-  if(nextBirthday < today) nextBirthday.setFullYear(today.getFullYear()+1);
+  if(nextBirthday<today) nextBirthday.setFullYear(today.getFullYear()+1);
   const diffDays=Math.ceil((nextBirthday-today)/86400000);
 
   dobDisplay.value=`${d.textContent} ${months[m.dataset.m]}`;
   picker.style.display="none";
 
   ring.style.display="block";
-  const max=365;
-  const progressValue=(max-diffDays)/max;
-  progress.style.strokeDashoffset=314-(314*progressValue);
-  daysText.textContent=`${diffDays} day${diffDays!==1?'s':''}`;
+  progress.style.strokeDashoffset = 314-(314*((365-diffDays)/365));
+  daysText.textContent = `${diffDays} day${diffDays!==1?"s":""}`;
 
   if(diffDays<=2){
     photo.disabled=false;
     photo.style.opacity=1;
     hint.textContent="🎉 Birthday incoming! Upload unlocked.";
     confetti();
-  }else{
+  } else {
     photo.disabled=true;
     photo.value="";
     photo.style.opacity=.6;
@@ -190,23 +253,26 @@ function confirmDOB(){
   }
 }
 
-// Image preview
-photo.onchange=()=>{ 
+photo.onchange=()=>{
   const f=photo.files[0];
   if(!f) return;
   preview.style.display="block";
   previewImg.src=URL.createObjectURL(f);
 };
 
-// Confetti
 function confetti(){
-  const c=confettiCanvas;
-  const ctx=c.getContext("2d");
-  c.width=innerWidth; c.height=innerHeight;
-  const pieces=[...Array(120)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*6+2,d:Math.random()*10}));
+  const ctx=confettiCanvas.getContext("2d");
+  confettiCanvas.width=innerWidth;
+  confettiCanvas.height=innerHeight;
+  const pieces=[...Array(120)].map(()=>({
+    x:Math.random()*confettiCanvas.width,
+    y:Math.random()*confettiCanvas.height,
+    r:Math.random()*6+2,
+    d:Math.random()*10
+  }));
   let t=0;
   (function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
+    ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
     pieces.forEach(p=>{
       ctx.fillStyle="#c9a44c";
       ctx.beginPath();
@@ -218,46 +284,7 @@ function confetti(){
     if(t<6) requestAnimationFrame(draw);
   })();
 }
-
-// Custom modal
-function showModal(title,msg){
-  modalTitle.textContent=title;
-  modalMessage.textContent=msg;
-  modal.style.display="flex";
-}
-function closeModal(){ modal.style.display="none"; }
-
-// FORM SUBMIT via AJAX
-const form = document.getElementById("birthdayForm");
-form.addEventListener("submit", async e=>{
-  e.preventDefault();
-  if(!form.name.value || !dobDisplay.value) return;
-
-  const formData = new FormData(form);
-
-  // Show loading
-  loadingModal.style.display="flex";
-
-  try{
-    const res = await fetch("https://formsubmit.co/ajax/officialdakeyed@gmail.com",{
-      method:"POST",
-      body: formData
-    });
-    loadingModal.style.display="none";
-
-    if(res.ok){
-      showModal("🎉 Success!","Your entry has been recorded.");
-      form.reset();
-      photo.disabled=true;
-      photo.style.opacity=.6;
-      ring.style.display="none";
-      preview.style.display="none";
-    } else throw new Error("Submission failed");
-  } catch(err){
-    loadingModal.style.display="none";
-    showModal("❌ Error","Submission failed! Please try again.");
-  }
-});
 </script>
+
 </body>
 </html>
