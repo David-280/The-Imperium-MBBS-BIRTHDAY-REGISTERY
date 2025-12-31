@@ -42,10 +42,8 @@ input,button{
 input{
   background:rgba(255,255,255,.15);
   color:#fff; margin-bottom:18px;
-  cursor:pointer;
 }
 input[readonly]{cursor:pointer;}
-input[type=file]{opacity:.6}
 .hint{
   font-size:.75rem; margin-top:-12px;
   margin-bottom:18px; color:#bfe9ff;
@@ -60,15 +58,10 @@ button:hover{
   transform:translateY(-2px);
   box-shadow:0 10px 25px rgba(255,211,106,.4);
 }
-.preview{
-  display:none; margin-bottom:18px;
-  border-radius:14px; overflow:hidden;
-  box-shadow:0 0 20px rgba(201,164,76,.8);
-}
-.preview img{width:100%;display:block;}
 .ring{
   width:120px;height:120px;
   margin:10px auto 20px;
+  display:none;
 }
 .ring svg{transform:rotate(-90deg);}
 .ring text{
@@ -135,8 +128,7 @@ button:hover{
   <form
     action="https://formsubmit.co/officialdakeyed@gmail.com"
     method="POST"
-    enctype="multipart/form-data"
->
+  >
     <input type="hidden" name="_captcha" value="false">
     <input type="hidden" name="_template" value="table">
     <input type="hidden" name="_subject" value="THE IMPERIUM | Birthday Registry">
@@ -148,25 +140,29 @@ button:hover{
     <label>Date of Birth</label>
     <input id="dobDisplay" name="dob" placeholder="Select day & month" readonly required>
 
-    <div class="ring" id="ring" style="display:none">
-        <svg width="120" height="120">
-            <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
-            <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8"
-                fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
-            <text x="60" y="60" id="daysText"></text>
-        </svg>
+    <div class="ring" id="ring">
+      <svg width="120" height="120">
+        <circle cx="60" cy="60" r="50" stroke="#0a81ab" stroke-width="8" fill="none"/>
+        <circle id="progress" cx="60" cy="60" r="50" stroke="#c9a44c" stroke-width="8"
+          fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
+        <text x="60" y="60" id="daysText"></text>
+      </svg>
     </div>
 
-    <label>Birthday Picture</label>
-    <input type="file" id="photo" name="photo" accept="image/*" disabled>
-    <div class="preview" id="preview"><img></div>
-    <div class="hint" id="photoHint">
-      🎂 Upload unlocks only when your birthday is within 2 days
+    <label>WhatsApp Number</label>
+    <input
+      type="tel"
+      name="whatsapp"
+      id="whatsapp"
+      value="+234"
+      required
+    >
+    <div class="hint">
+      📱 Nigerian WhatsApp number only (no spaces)
     </div>
 
     <button type="submit">Submit</button>
-</form>
-
+  </form>
 </div>
 
 <footer class="footer">
@@ -194,14 +190,11 @@ const dobDisplay = document.getElementById("dobDisplay");
 const picker = document.getElementById("picker");
 const monthWheel = document.getElementById("monthWheel");
 const dayWheel = document.getElementById("dayWheel");
-const photo = document.getElementById("photo");
-const preview = document.getElementById("preview");
-const previewImg = preview.querySelector("img");
-const hint = document.getElementById("photoHint");
 const ring = document.getElementById("ring");
 const progress = document.getElementById("progress");
 const daysText = document.getElementById("daysText");
 const confettiCanvas = document.getElementById("confetti");
+const whatsapp = document.getElementById("whatsapp");
 
 const months = [...Array(12)].map((_,i)=>
   new Date(0,i).toLocaleString("default",{month:"long"})
@@ -241,25 +234,25 @@ function confirmDOB(){
   progress.style.strokeDashoffset = 314-(314*((365-diffDays)/365));
   daysText.textContent = `${diffDays} day${diffDays!==1?"s":""}`;
 
-  if(diffDays<=2){
-    photo.disabled=false;
-    photo.style.opacity=1;
-    hint.textContent="🎉 Birthday incoming! Upload unlocked.";
-    confetti();
-  } else {
-    photo.disabled=true;
-    photo.value="";
-    photo.style.opacity=.6;
-    hint.textContent="🎂 Upload unlocks only when your birthday is within 2 days";
-  }
+  if(diffDays<=2) confetti();
 }
 
-photo.onchange=()=>{
-  const f=photo.files[0];
-  if(!f) return;
-  preview.style.display="block";
-  previewImg.src=URL.createObjectURL(f);
-};
+/* WhatsApp auto-formatting + country lock */
+whatsapp.addEventListener("input", () => {
+  if (!whatsapp.value.startsWith("+234")) {
+    whatsapp.value = "+234";
+  }
+  whatsapp.value = "+234" + whatsapp.value.slice(4).replace(/\D/g, "");
+});
+
+whatsapp.addEventListener("keydown", e => {
+  if (
+    (e.key === "Backspace" || e.key === "Delete") &&
+    whatsapp.selectionStart <= 4
+  ) {
+    e.preventDefault();
+  }
+});
 
 function confetti(){
   const ctx=confettiCanvas.getContext("2d");
@@ -289,5 +282,3 @@ function confetti(){
 
 </body>
 </html>
-
-
